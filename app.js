@@ -1,5 +1,5 @@
 // Change this to match your live codespace or temporary deployment domain
-const API_BASE_URL = window.location.origin.replace("3000", "8000"); // Auto-maps port if running locally side-by-side
+const API_BASE_URL = "https:bos-app.onrender.com"; // Auto-maps port if running locally side-by-side
 
 // 1. Function to save user data to Firestore via FastAPI backend
 async function saveUserData(userId, name, email) {
