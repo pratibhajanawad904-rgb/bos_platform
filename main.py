@@ -202,3 +202,14 @@ def register_plot(form: PlotForm):
         return {"error": str(e)}
     finally:
         conn.close()
+        # 1. Add this request validation model near your other PlotForm model
+class AdminLogin(BaseModel):
+    password: str
+
+# 2. Add this login verification route at the bottom of the file
+@app.post("/api/admin/login")
+def admin_login(form: AdminLogin):
+    if form.password == ADMIN_PASSWORD:
+        return {"status": "success", "message": "Access granted"}
+    else:
+        return {"status": "error", "message": "Access denied"}
