@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI()
-
+ADMIN_PASSWORD = "Pratii@2004"
 # Enable CORS so your Vercel frontend can talk to Render safely
 app.add_middleware(
     CORSMiddleware,
