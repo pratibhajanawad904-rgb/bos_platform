@@ -236,10 +236,31 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
             "te": "కోతకు కావలసిన బ్రిక్స్ రీడింగ్: 18-20%."
         }
 
+    action_label = {
+        "en": "⚠️ ACTION REQUIRED:",
+        "kn": "⚠️ ಅಗತ್ಯ ಕ್ರಮಗಳು:",
+        "mr": "⚠️ आवश्यक कृती:",
+        "te": "⚠️ అవసరమైన చర్యలు:"
+    }
+    
+    obs_label = {
+        "en": "👁️ FIELD OBSERVATION CHECKLIST:",
+        "kn": "👁️ ಕ್ಷೇತ್ರ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ:",
+        "mr": "👁️ शेत निरीक्षण सूची:",
+        "te": "👁️ క్షేత్ర పరిశీలన జాబితా:"
+    }
+    
+    stage_word = {
+        "en": "Stage",
+        "kn": "ಹಂತ",
+        "mr": "टप्पा",
+        "te": "ದశ"
+    }
+
     return (
-        f"Day {days_passed} — {stage[l_key]} Stage\n\n"
-        f"🔔 ACTION REQUIRED:\n{action[l_key]}\n\n"
-        f"👁️ FIELD OBSERVATION CHECKLIST:\n{obs[l_key]}"
+        f"Day {days_passed} - {stage[l_key]} {stage_word.get(l_key, 'Stage')}\n\n"
+        f"{action_label.get(l_key, '⚠️ ACTION REQUIRED:')}\n{action[l_key]}\n\n"
+        f"{obs_label.get(l_key, '👁️ FIELD OBSERVATION CHECKLIST:')}\n{obs[l_key]}"
     )
     
 
