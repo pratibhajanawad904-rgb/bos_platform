@@ -241,7 +241,7 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         f"🔔 ACTION REQUIRED:\n{action[l_key]}\n\n"
         f"👁️ FIELD OBSERVATION CHECKLIST:\n{obs[l_key]}"
     )
-    )
+    
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
