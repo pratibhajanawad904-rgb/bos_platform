@@ -1,12 +1,13 @@
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI()
 
+# Enable CORS so your Vercel frontend can talk to Render safely
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,64 +16,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class PlotForm(BaseModel):
-    farmer_name: str
-    phone_number: str
-    crop: str
-    date: str
-    acreage: float
-    lang: str
+DB_PATH = os.path.join(os.path.dirname(__file__), "bos_platform.db")
 
-class ChatForm(BaseModel):
-    text_payload: str
-    sender_role: str
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "bos_platform.db")
-
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS plots (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            owner_name TEXT,
-            phone_number TEXT,
-            crop TEXT,
-            date TEXT,
-            acreage REAL,
-            advisory TEXT
-        )
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS chats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            text_payload TEXT,
-            sender_role TEXT
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-init_db()
-
-# COMPREHENSIVE MULTI-LINGUAL ADVISORY ENGINE
+# 1. Base Agronomy Rules Matrix
 advisory_matrix = {
     "sugarcane": {
-        "en": "Day 9 — [Early Root Zone Drenching]: Execute root zone drenching loop using Humic Acid (500ml/acre) to accelerate root branching.\n\nPROACTIVE CAPA: Maintain inline drip irrigation cycles.\n\nCORRECTIVE CAPA: Watch for early uniform green shoots.",
-        "mr": "दिवस ९ — [सुरुवातीची मूळ झोन ड्रेंचिंग]: मुळांच्या वाढीसाठी ह्युमिक ऍसिड (५०० मिली/एकर) वापरून ड्रेंचिंग करा.\n\nखबरदारी: ठिबक सिंचन चक्र नियमित ठेवा.\n\nदुरुस्ती उपाय: पिकाच्या ओळींमध्ये सुरुवातीच्या हिरव्या कोंबांवर बारीक लक्ष ठेवा.",
-        "kn": "ದಿನ 9 — [ಆರಂಭಿಕ ಬೇರು ವಲಯ ಡ್ರೆಂಚಿಂಗ್]: ಬೇರುಗಳ ಬೆಳವಣಿಗೆಯನ್ನು ವೇಗಗೊಳಿಸಲು ಹ್ಯೂಮಿಕ್ ಆಸಿಡ್ (500ml/ಎಕರೆ) ಬಳಸಿ ಡ್ರೆಂಚಿಂಗ್ ಮಾಡಿ.\n\nಮುನ್ನೆಚ್ಚರಿಕೆ: ಹನಿ ನೀರಾವರಿ ಚಕ್ರಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ನಿರ್ವಹಿಸಿ.\n\nದುರಸ್ತಿ ಕ್ರಮ: ಸಾಲುಗಳಲ್ಲಿ ಆರಂಭಿಕ ಹಸಿರು ಚಿಗುರುಗಳನ್ನು ಗಮನಿಸಿ.",
-        "te": "రోజు 9 — [ప్రారంభ రూట్ జోన్ డ్రెంచింగ్]: వేర్ల పెరుగుదలను వేగవంతం ಮಾಡಲು హ్యూమిక్ యాసిಡ್ (500ml/ఎకరం) ఉపయోగించి రూట్ జోన్ డ్రెంచింగ్ చేయండి.\n\nముందుజాగ్రత్త: డ్రిప్ ఇరిగేషన్ సైకిల్స్ క్రమం తప్పకుండా నిర్వహించండి.\n\nనివారణ చర్య: వరుసలలో ప్రారంభ పచ్చని మొలకలను గమనించండి."
-    },
-    "cotton": {
-        "en": "Day 5 — [Seedling Protection]: Ensure balanced nitrogen application. Check soil conditions for optimal moisture retention.\n\nPROACTIVE CAPA: Keep drainage channels clear.\n\nCORRECTIVE CAPA: Spray organic biological shields if pests emerge.",
-        "mr": "दिवस ५ — [रोप संरक्षण]: संतुलित नत्र खत वापरल्याची खात्री करा. जमिनीतील ओलावा तपासा.\n\nखबरदारी: पाण्याचा निचरा होणारे चर मोकळे ठेवा.\n\nदुरुस्ती उपाय: कीड दिसून आल्यास सेंद्रिय जैविक फवारणी करा.",
-        "kn": "ದಿನ 5 — [ಸಸಿ ರಕ್ಷಣೆ]: ಸಮತೋಲಿತ ಸಾರಜನಕ ಅನ್ವಯವನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು ಪರೀಕ್ಷಿಸಿ.\n\nಮುನ್ನೆಚ್ಚರಿಕೆ: ಒಳಚರಂಡಿ ಕಾಲುವೆಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.\n\nದುರಸ್ತಿ ಕ್ರಮ: ಕೀಟಗಳು ಕಂಡುಬಂದಲ್ಲಿ ಸಾವಯವ ಜೈವಿಕ ಕೀಟನಾಶಕ ಸಿಂಪಡಿಸಿ.",
-        "te": "రోజు 5 — [మొలకల రక్షణ]: సమతుల్య నత్రజని వినియోగాన్ని నిర్ధారించుకోండి. నేల తేమను పరీక్షించండి.\n\nముందుజాగ్రత్త: నీటి పారుదల కాలువలను శుభ್ರంగా ఉంచండి.\n\nనివారణ చర్య: తెగుళ్లు ಕಂಡುಬಂದಲ್ಲಿ సేంద్రీయ బయో-స్ప్రేలను ఉపయోగించండి."
+        "en": "Day {days} — [Early Root Zone Drenching]: Execute root zone drenching loop using Humic Acid (500ml/acre) to accelerate root branching.\n\nPROACTIVE CAPA: Maintain inline drip irrigation cycles.\n\nCORRECTIVE CAPA: Watch for early uniform green shoots.",
+        "kn": "ದಿನ {days} — [ಸಸಿ ರಕ್ಷಣೆ]: ಸಮತೋಲಿತ ನೀರಾವರಿ ನಿರ್ವಹಣೆ ಮತ್ತು ಪೋಷಕಾಂಶಗಳ ಪೂರೈಕೆ.",
+        "te": "రోజు {days} — [మొలకల రక్షణ]: సమతుల్య నీటి యాజమాన్యం మరియు పోషకాల సరఫరా."
     }
 }
 
-def generate_agronomy_rules(crop, lang):
+# 2. Dynamic Advisory Calculation Function
+def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
     c_key = crop.lower().strip()
     l_key = lang.lower().strip()
     
@@ -81,80 +37,89 @@ def generate_agronomy_rules(crop, lang):
     if l_key not in ["en", "mr", "kn", "te"]:
         l_key = "en"
         
-    return advisory_matrix[c_key][l_key]
-
-@app.get("/api/plots")
-async def get_plots():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
     try:
-        cursor.execute("SELECT owner_name, phone_number, crop, date, acreage, advisory FROM plots ORDER BY id DESC")
-        rows = cursor.fetchall()
-        return [{"owner_name": r[0], "phone": r[1], "crop": r[2], "date": r[3], "acreage": r[4], "advisory": r[5]} for r in rows]
-    except Exception as e:
-        return {"error": str(e)}
-    finally:
-        conn.close()
-
-@app.post("/api/plots")
-async def register_plot(form: PlotForm):
-    clean_phone = form.phone_number.strip().replace("+91", "").strip()
+        # Calculate exactly how many days have passed since sowing
+        sowing_date = datetime.strptime(sowing_date_str, "%Y-%m-%d").date()
+        today = datetime.today().date()
+        days_passed = (today - sowing_date).days
+        
+        # Prevent 0 or negative values if the date is in the future/today
+        if days_passed < 1:
+            days_passed = 1
+    except Exception:
+        days_passed = 9 # Fallback day default if date string parsing breaks
+        
+    base_template = advisory_matrix[c_key][l_key]
     
-    if not clean_phone.isdigit() or len(clean_phone) != 10:
-        raise HTTPException(status_code=400, detail="Invalid mobile length.")
-    if clean_phone in ["1234567890", "0000000000", "9999999999"]:
-        raise HTTPException(status_code=400, detail="Prohibited sequence blocked.")
+    # Inject the actual day counter into the matrix string template dynamically
+    return base_template.format(days=days_passed)
 
+# 3. Database Initializer (Builds table with phone_number securely)
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS plots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            owner_name TEXT NOT NULL,
+            phone_number TEXT NOT NULL,
+            crop TEXT NOT NULL,
+            acreage INTEGER NOT NULL,
+            sowing_date TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# 4. Pydantic Request Models
+class PlotForm(BaseModel):
+    farmer_name: str
+    phone_number: str
+    crop: str
+    acreage: int
+    date: str
+    lang: str = "en"
+
+# 5. GET API: Retrieve all plots with calculated ages
+@app.get("/api/plots")
+def get_plots():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
-        cursor.execute("""
-            SELECT id FROM plots 
-            WHERE phone_number = ? AND crop = ? AND date = ? AND acreage = ?
-        """, (form.phone_number.strip(), form.crop, form.date, form.acreage))
-        
-        duplicate = cursor.fetchone()
-        if duplicate:
-            return {"status": "ignored", "message": "Duplicate registration skipped."}
-            
-        advisory_text = generate_agronomy_rules(form.crop, form.lang)
-        
-        cursor.execute("""
-            INSERT INTO plots (owner_name, phone_number, crop, date, acreage, advisory)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (form.farmer_name.strip(), form.phone_number.strip(), form.crop, form.date, form.acreage, advisory_text))
-        
-        conn.commit()
-        return {"status": "success"}
-    except Exception as e:
-        return {"error": str(e)}
-    finally:
-        conn.close()
-
-@app.get("/api/chat")
-async def get_chats():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    try:
-        cursor.execute("SELECT text_payload, sender_role FROM chats ORDER BY id ASC")
+        cursor.execute("SELECT owner_name, phone_number, crop, acreage, sowing_date FROM plots")
         rows = cursor.fetchall()
-        return [{"text_payload": r[0], "sender_role": r[1]} for r in rows]
+        
+        return [
+            {
+                "owner_name": r[0],
+                "phone": r[1],
+                "crop": r[2],
+                "acreage": r[3],
+                "date": r[4],
+                "advisory": generate_agronomy_rules(r[2], "en", r[4])
+            }
+            for r in rows
+        ]
     except Exception as e:
         return {"error": str(e)}
     finally:
         conn.close()
 
-@app.post("/api/chat")
-async def post_chat(form: ChatForm):
+# 6. POST API: Save new layout records
+@app.post("/api/plots")
+def register_plot(form: PlotForm):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO chats (text_payload, sender_role) VALUES (?, ?)", (form.text_payload, form.sender_role))
+        cursor.execute(
+            "INSERT INTO plots (owner_name, phone_number, crop, acreage, sowing_date) VALUES (?, ?, ?, ?, ?)",
+            (form.farmer_name, form.phone_number, form.crop, form.acreage, form.date)
+        )
         conn.commit()
-        return {"status": "success"}
+        return {"message": "Plot registration successful."}
     except Exception as e:
         return {"error": str(e)}
     finally:
         conn.close()
-        # refresh database schema
-        
