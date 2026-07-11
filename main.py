@@ -156,3 +156,5 @@ async def post_chat(form: ChatForm):
         return {"error": str(e)}
     finally:
         conn.close()
+        # refresh database schema
+        
