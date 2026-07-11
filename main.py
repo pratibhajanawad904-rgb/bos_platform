@@ -240,9 +240,10 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         }
 
     return (
-        f"Day {days_passed} — [{stage[l_key]} Stage]\n\n"
-        f"🔔 ACTION REQUIRED:\n{action[l_key]}\n\n"
-        f"👁️ FIELD OBSERVATION CHECKLIST:\n{obs[l_key]}"
+        f"Day {days_passed} - [{stage.get(lang, stage['en'])} Stage]\n\n"
+        f"🔔 ACTION REQUIRED:\n{action.get(lang, action['en'])}\n\n"
+        f"👁️ FIELD OBSERVATION CHECKLIST:\n{obs.get(lang, obs['en'])}"
+    )
     )
 
 # 2. Database Initialization
