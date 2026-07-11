@@ -50,11 +50,21 @@ async function saveUserData(farmerName, phoneNumber, crop) {
     }
 }
 
-// 2. UPDATED: Function to load plot layout cards dynamically using the selected language
+// 2. UPDATED: Smart Function to load plot layout cards dynamically using active UI language
 async function loadPlotsData() {
     try {
-        // Appends the current active language token parameter dynamically (?lang=kn, ?lang=te, etc.)
-        const response = await fetch(`${API_BASE_URL}/api/plots?lang=${currentLanguage}`);
+        // 1. Automatically detect what language the HTML page is currently using
+        // It checks the main HTML container or falls back to our global tracker variable
+        let activeLang = document.documentElement.lang || currentLanguage || 'en';
+        
+        // Handle common variations in button names
+        if (activeLang === 'kan') activeLang = 'kn';
+        if (activeLang === 'telgu') activeLang = 'te';
+
+        console.log("Requesting data from backend in language:", activeLang);
+
+        // 2. Appends the language token parameter dynamically (?lang=kn, ?lang=te, etc.)
+        const response = await fetch(`${API_BASE_URL}/api/plots?lang=${activeLang}`);
         
         if (!response.ok) {
             throw new Error(`HTTP status: ${response.status}`);
@@ -63,8 +73,13 @@ async function loadPlotsData() {
         const plots = await response.json();
         console.log("Fetched Plots Data:", plots);
         
-        // Call your existing frontend rendering UI function here to display plots on screen
-        // Example: renderPlotsOnDashboard(plots);
+        // This is where your code updates the screen. 
+        // If you have a function that renders the plots, make sure it is called here!
+        if (typeof renderPlots === "function") {
+            renderPlots(plots);
+        } else if (typeof displayPlots === "function") {
+            displayPlots(plots);
+        }
         
     } catch (error) {
         console.error("Error fetching regional plots dashboard records:", error);
