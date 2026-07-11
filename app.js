@@ -1,7 +1,22 @@
 // Base URL pointing to your live Render backend
 const API_BASE_URL = "https://bos-app.onrender.com";
 
-// 1. Function to save plot data to Firestore via FastAPI
+// Global state variable to track the active language (defaults to English)
+let currentLanguage = 'en'; 
+
+// Function to handle language selection switcher button updates
+function switchLanguage(langCode) {
+    // Standardize naming conventions if your UI passes 'kan' or 'telgu'
+    if (langCode === 'kan') langCode = 'kn';
+    if (langCode === 'telgu') langCode = 'te';
+    
+    currentLanguage = langCode;
+    
+    // Refresh the displayed data cards dynamically with the new language translation
+    loadPlotsData();
+}
+
+// 1. Function to save plot data via FastAPI (POST Request)
 async function saveUserData(farmerName, phoneNumber, crop) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/plots`, {
@@ -12,7 +27,10 @@ async function saveUserData(farmerName, phoneNumber, crop) {
             body: JSON.stringify({
                 farmer_name: farmerName,
                 phone_number: phoneNumber,
-                crop: crop
+                crop: crop,
+                // Optional: You can pass the date selection value if pulled from your date form picker field
+                date: new Date().toISOString().split('T')[0], 
+                lang: currentLanguage
             })
         });
 
@@ -22,6 +40,9 @@ async function saveUserData(farmerName, phoneNumber, crop) {
 
         const data = await response.json();
         console.log("Save Status:", data);
+        
+        // Refresh dashboard contents to show the newly added record instantly
+        loadPlotsData();
         return data;
     } catch (error) {
         console.error("Error saving user data:", error);
@@ -29,38 +50,49 @@ async function saveUserData(farmerName, phoneNumber, crop) {
     }
 }
 
-// 2. Setup Form Submission Event Listener
-document.addEventListener("DOMContentLoaded", () => {
-    // Select your form element (adjust selector if your form has a different ID/class)
-    const registerForm = document.querySelector("form") || document.getElementById("registerForm");
-    
-    if (registerForm) {
-        registerForm.addEventListener("submit", async (event) => {
-            event.preventDefault(); // Stop page from reloading
-
-            // Get inputs from the UI fields
-            const farmerNameInput = document.getElementById("farmerName") || document.querySelector("input[placeholder='pratibha']");
-            const mobileNumberInput = document.getElementById("mobileNumber") || document.querySelector("input[placeholder='8618734070']");
-            const selectCropElement = document.getElementById("selectCrop") || document.querySelector("select");
-
-            const farmerName = farmerNameInput ? farmerNameInput.value.trim() : "";
-            const phoneNumber = mobileNumberInput ? mobileNumberInput.value.trim() : "";
-            const crop = selectCropElement ? selectCropElement.value : "";
-
-            if (!farmerName || !phoneNumber || !crop) {
-                alert("Please fill in all required fields.");
-                return;
-            }
-
-            console.log("Submitting:", { farmerName, phoneNumber, crop });
-            
-            // Call the API function
-            const result = await saveUserData(farmerName, phoneNumber, crop);
-            
-            if (result) {
-                alert("Layout successfully registered!");
-                registerForm.reset(); // Clear form fields
-            }
-        });
+// 2. UPDATED: Function to load plot layout cards dynamically using the selected language
+async function loadPlotsData() {
+    try {
+        // Appends the current active language token parameter dynamically (?lang=kn, ?lang=te, etc.)
+        const response = await fetch(`${API_BASE_URL}/api/plots?lang=${currentLanguage}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP status: ${response.status}`);
+        }
+        
+        const plots = await response.json();
+        console.log("Fetched Plots Data:", plots);
+        
+        // Call your existing frontend rendering UI function here to display plots on screen
+        // Example: renderPlotsOnDashboard(plots);
+        
+    } catch (error) {
+        console.error("Error fetching regional plots dashboard records:", error);
     }
-});
+}
+
+// 3. NEW: Function to handle Admin Dashboard Verification Passwords
+async function verifyAdminLogin(inputPassword) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password: inputPassword })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === "success") {
+            alert("Access granted!");
+            // Insert your frontend routing logic here to unlock dashboard views
+            // Example: showAdminPanel();
+        } else {
+            alert("Access denied: " + result.message);
+        }
+    } catch (error) {
+        console.error("Authentication server request failed:", error);
+        alert("Error connecting to server verification service.");
+    }
+}
