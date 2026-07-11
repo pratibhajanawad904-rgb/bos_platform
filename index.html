@@ -114,28 +114,56 @@
         }
 
         async function handleRegistration() {
-            const name = document.getElementById('farmer-name').value;
-            const phone = document.getElementById('farmer-phone').value;
-            const crop = document.getElementById('crop-type').value;
-            const date = document.getElementById('sowing-date').value;
-            const acreage = document.getElementById('acreage-val').value;
+    const name = document.getElementById('farmer-name').value;
+    const phone = document.getElementById('farmer-phone').value;
+    const crop = document.getElementById('crop-type').value;
+    const date = document.getElementById('sowing-date').value;
+    const acreage = document.getElementById('acreage-val').value;
 
-            if(!name || !phone || !date || !acreage) {
-                alert("Please fill all fields");
-                return;
-            }
+    if (!name || !phone || !date || !acreage) {
+        alert("Please fill all fields");
+        return;
+    }
 
-            try {
-                await fetch(`${API_BASE_URL}/api/plots`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ farmer_name: name, phone_number: phone, crop: crop, acreage: parseInt(acreage), date: date, lang: activeLanguage })
-                });
-                syncPlotsData();
-            } catch (err) {
-                console.error("Error saving data:", err);
-            }
+    try {
+        console.log("Submitting registration for:", name);
+        
+        const response = await fetch(`${API_BASE_URL}/api/plots`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                farmer_name: name, 
+                phone_number: phone,  // Fixed: explicitly matches the backend field name!
+                crop: crop, 
+                acreage: parseInt(acreage), 
+                date: date, 
+                lang: activeLanguage 
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server returned status: ${response.status}`);
         }
+
+        const resData = await response.json();
+        console.log("Registration response:", resData);
+        
+        // Instantly refresh cards so the farmer sees their record immediately
+        await syncPlotsData();
+        
+        // Clear out the input values so the form resets cleanly
+        document.getElementById('farmer-name').value = "";
+        document.getElementById('farmer-phone').value = "";
+        document.getElementById('sowing-date').value = "";
+        document.getElementById('acreage-val').value = "";
+        
+        alert("Registration Successful!");
+        
+    } catch (err) {
+        console.error("Error saving data:", err);
+        alert("Server error occurred while registering the plot. Please try again.");
+    }
+}
 
         async function syncPlotsData() {
             console.log("Sync active... Requesting language parameter: " + activeLanguage);
