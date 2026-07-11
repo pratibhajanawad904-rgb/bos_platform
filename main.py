@@ -18,12 +18,10 @@ app.add_middleware(
 DB_PATH = os.path.join(os.path.dirname(__file__), "bos_platform.db")
 ADMIN_PASSWORD = "Pratii@2004"
 
-# 1. Timeline Engine Function mapping all 4 requested languages (en, mr, kn, te)
 def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
     c_key = crop.lower().strip()
     l_key = lang.lower().strip()
     
-    # Clean language aliases if frontend sends 'kan' instead of 'kn' or 'telgu' instead of 'te'
     if l_key == "kan": l_key = "kn"
     if l_key == "telgu": l_key = "te"
     
@@ -41,28 +39,27 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
     except Exception:
         days_passed = 0
 
-    # Determine data values based on thresholds from your documentation
     if days_passed < 3:
         stage = {"en": "Planting", "mr": "लागवड", "kn": "ನಾಟಿ", "te": "నాటడం"}
         action = {
             "en": "Apply Basal fertilizer mix (N:P:K + O-Max) in furrows. Treat setts/buds with Carbendazim + Imidacloprid for 15 mins. Plant at 5x2 ft spacing.",
             "mr": "सऱ्यांमध्ये बेसल खत मिश्रण (N:P:K + O-Max) टाका. बेणे १५ मिनिटे कार्बेन्डाझिम + इमिडाक्लोप्रिड द्रावणात बुडवा. ५x२ फूट अंतरावर लागवड करा.",
             "kn": "ಸಾಲುಗಳಲ್ಲಿ ಬೇಸಲ್ ಗೊಬ್ಬರ ಮಿಶ್ರಣವನ್ನು (N:P:K + O-Max) ಹಾಕಿ. ಕಬ್ಬಿನ ಜಲ್ಲೆಗಳನ್ನು 15 ನಿಮಿಷ ಕಾರ್ಬೆಂಡಾಜಿಮ್ + ಇಮಿಡಾಕ್ಲೋಪ್ರಿಡ್‌ನಲ್ಲಿ ಉಪಚರಿಸಿ. 5x2 ಅಡಿ ಅಂತರದಲ್ಲಿ ನಾಟಿ ಮಾಡಿ.",
-            "te": "సాలులలో బేసల్ ఎరువుల మిశ్రమాన్ని (N:P:K + O-Max) వేయండి. విత్తన ముక్కలను 15 నిమిషాల పాటు కార్బెండజిమ్ + ఇమిడాక్లోప్రిడ్‌తో శుద్ధి చేయండి. 5x2 అడుగుల దూరంలో నాటండి."
+            "te": "సాలులలో బేసల్ ఎరువుల మిశ్రమాన్ని (N:P:K + O-Max) వేయండి. విత్తన ముక్కలను 15 నిమిషాల పాటు కార్బెండజిమ్ + ఇమిడాక్లోప్రిడ్‌తో శుద్ధి చేయండి. 5&times;2 అడుగుల దూరంలో నాటండి."
         }
         obs = {
             "en": "Check that furrow depth is uniform between 9 to 12 inches.",
             "mr": "सऱ्यांची खोली ९ ते १२ इंच समान असल्याची खात्री करा.",
             "kn": "ಸಾಲಿನ ಆಳವು 9 ರಿಂದ 12 ಇಂಚುಗಳಷ್ಟು ಏಕರೂಪವಾಗಿರುವುದನ್ನು ಪರಿಶೀಲಿಸಿ.",
-            "te": "సాలు లోతు 9 నుండి 12 అంగుళాల వరకు ఒకేలా ఉందో లేదో తనిఖీ చేయండి."
+            "te": "సాలు లోతు 9 నుండి 12 అంగుళాల వరకు ఒకేలా ఉందో లేど తనిఖీ చేయండి."
         }
     elif days_passed < 20:
-        stage = {"en": "Pre-emergence", "mr": "उगवणपूर्व अवस्था", "kn": "ಮೊversion ಪೂರ್ವ ಹಂತ", "te": "మొలకల ముందు దశ"}
+        stage = {"en": "Pre-emergence", "mr": "उगवणपूर्व अवस्था", "kn": "ಮೊಳಕೆ ಪೂರ್ವ ಹಂತ", "te": "మొలకల ముందు దశ"}
         action = {
             "en": "Spray Atrazine 50% WP at 1 kg/acre across fields using a flat-fan nozzle. Ensure the soil has optimal moisture before spraying.",
             "mr": "फ्लॅट-फॅन नोजल वापरून शेतात १ किलो/एकर या दराने ॲट्राझिन ५०% डब्ल्यूपी फवारा. फवारणीपूर्वी जमिनीत योग्य ओलावा असल्याची खात्री करा.",
-            "kn": "ಫ್ಲಾಟ್-ಫ್ಯಾನ್ ನಾಝಲ್ ಬಳಸಿ ಎಕರೆಗೆ 1 ಕೆಜಿ ಅಟ್ರಾಜಿನ್ 50% WP ಸಿಂಪಡಿಸಿ. ಸಿಂಪಡಿಸುವ ಮೊದಲು ಮಣ್ಣಿನಲ್ಲಿ ಉತ್ತಮ ತೇವಾಂಶವಿರುವುದನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
-            "te": "ఫ్లాట్-ఫ్యాన్ నాజిల్ ఉపయోగించి ఎకరాకు 1 కిలో అట్రాజిన్ 50% WP పిచికారీ చేయండి. పిచికారీ చేయడానికి ముందు నేలలో తగినంత తేమ ఉండేలా చూసుకోండి."
+            "kn": "ಫ್ಲಾಟ್-ಫ್ಯಾನ್ ನಾಝಲ್ ಬಳಸಿ ಎಕರೆಗೆ 1 ಕೆಜಿ ಅಟ್ರಾಜಿನ್ 50% WP ಸಿಂಪಡಿಸಿ. ಸಿಂಪಡಿಸುವ ಮೊದಲು ಮಣ್ಣಿನಲ್ಲಿ ಉತ್ತಮ ತೇವಾಂಶವಿರುವುದನ್ನು khachitapadisikolli.",
+            "te": "ఫ్లాట్-యాన్ నాజిల్ ఉపయోగించి ఎకరాకు 1 కిలో అట్రాజిన్ 50% WP పిచికారీ చేయండి. పిచికారీ చేయడానికి ముందు నేలలో తగినంత తేమ ఉండేలా చూసుకోండి."
         }
         obs = {
             "en": "Monitor for soil crusting or cracking which might block bud emergence.",
@@ -96,14 +93,14 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
             "en": "Critical: Check for fields with less than 85% germination uniformity. Fill gaps immediately.",
             "mr": "अत्यंत महत्त्वाचे: शेतात ८५% पेक्षा कमी उगवण एकसारखी असल्यास तपासा. त्वरित नांग्या भरा.",
             "kn": "ಬಹಳ ಮುಖ್ಯ: ಶೇ. 85 ಕ್ಕಿಂತ ಕಡಿಮೆ ಏಕರೂಪದ ಮೊಳಕೆ ಇರುವ ಕ್ಷೇತ್ರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ತಕ್ಷಣ ಗ್ಯಾಪ್ ಫಿಲ್ಲಿಂಗ್ ಮಾಡಿ.",
-            "te": "చాలా ముఖ్యం: 85% కంటే తక్కువ మొలకల శాతం ఉన్న పొలాలను తనిखీ చేయండి. వెంటనే ఖాళీలను పూరించండి."
+            "te": "చాలా ముఖ్యం: 85% కంటే తక్కువ మొలకల శాతం ఉన్న పొలాలను తనిఖీ చేయండి. వెంటనే ఖాళీలను పూరించండి."
         }
     elif days_passed < 60:
         stage = {"en": "Tillering Start", "mr": "फुटवे फुटण्यास सुरुवात", "kn": "ಪಿಲಕೆ ಒಡೆಯುವ ಆರಂಭ", "te": "పిలకలు ప్రారంభ దశ"}
         action = {
             "en": "Run mini-tractor/cultivator for mechanical weed clearance and soil aeration. Apply first top dress of Nitrogen (40 kg/acre) via drip/side-band.",
             "mr": "तण काढण्यासाठी आणि माती मोकळी करण्यासाठी मिनी-ट्रॅक्टर/कल्टिव्हेटर चालवा. ठिबकद्वारे नायट्रोजनचा पहिला हप्ता (४० किलो/एकर) द्या.",
-            "kn": "ಕಳೆ ತೆಗೆಯಲು ಮತ್ತು ಮಣ್ಣಿನ ವಾತಾಯನಕ್ಕಾಗಿ ಮಿನಿ ಟ್ರ್ಯಾಕ್ಟರ್ ಚಲಾಯಿಸಿ. ಡ್ರಿಪ್ ಮೂಲಕ ಸಾರಜನಕದ (40 kg/ಎಕರೆ) ಮೊದಲ ಡೋಸ್ ನೀಡಿ.",
+            "kn": "ಕಳೆ ತೆಗೆಯಲು ಮತ್ತು ಮಣ್ಣಿನ ವಾತಾಯನಕ್ಕಾಗಿ मಿನಿ ಟ್ರ್ಯಾಕ್ಟರ್ ಚಲಾಯಿಸಿ. ಡ್ರಿಪ್ ಮೂಲಕ ಸಾರಜನಕದ (40 kg/ಎಕರೆ) ಮೊದಲ ಡೋಸ್ ನೀಡಿ.",
             "te": "కలుపు నివారణ మరియు నేల వాతావరణం కోసం మినీ ట్రాక్టర్ నడపండి. డ్రిప్ ద్వారా నైట్రోజన్ (40 kg/ఎకరా) మొదటి డోస్ వేయండి."
         }
         obs = {
@@ -117,13 +114,13 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         action = {
             "en": "Spray 1% Urea + 1% Magnesium Sulfate + 0.5% Micronutrient mix. Release Trichogramma chilonis parasite cards at 2.5 cc/acre spray for early shoot borer.",
             "mr": "१% युरिया + १% मॅग्नेशियम सल्फेट + ०.५% सूक्ष्म अन्नद्रव्य मिश्रण फवारा. खोडकिडीसाठी २.५ सीसी/एकर या दराने ट्रायकोगामा चिलोनिस परजीवी कार्ड सोडा.",
-            "kn": "1% ಯೂರಿಯಾ + 1% ಮೆಗ್ನೀಸಿಯಮ್ ಸಲ್ಫೇಟ್ + 0.5% ಸೂಕ್ಷ್ಮ ಪೋಷಕಾಂಶ ಮಿಶ್ರಣವನ್ನು ಸಿಂಪಡಿಸಿ. ಕಾಂಡಕೋರಕ ಕೀಟಕ್ಕಾಗಿ ಎಕರೆಗೆ 2.5 cc ಟ್ರೈಕೊಗ್ರಾಮಾ ಕಾರ್ಡ್‌ಗಳನ್ನು ಬಿಡುಗಡೆ ಮಾಡಿ.",
+            "kn": "1% ಯೂರಿಯಾ + 1% ಮೆಗ್ನೀಸಿಯಮ್ ಸಲ್ಫೇಟ್ + 0.5% ಸೂಕ್ಷ್ಮ ಪೋಷಕಾಂಶ ಮಿಶ್ರಣವನ್ನು ಸಿಂಪಡಿಸಿ. ಕಾಂಡಕೋರಕ ಕೀಟಕ್ಕಾಗಿ ಎಕರೆಗೆ 2.5 cc ಟ್ರೈಕೊಗ್ರಾമാ ಕಾರ್ಡ್‌ಗಳನ್ನು ಬಿಡುగಡೆ ಮಾಡಿ.",
             "te": "1% యూరియా + 1% మెగ్నీషియం సల్ఫేట్ + 0.5% సూక్ష్మపోషకాల మిశ్రమాన్ని పిచికారీ చేయండి. కాండం తొలిచే పురుగు నివారణకు ఎకరాకు 2.5 cc ట్రైకోగ్రామా కార్డ్స్ విడుదల చేయండి."
         }
         obs = {
             "en": "Check for dead hearts (withered central leaf whorl), indicating Early Shoot Borer attack. Count tillers on random clumps (target 4-5 robust tillers).",
             "mr": "खोडकिडीचा प्रादुर्भाव दर्शवणारी सुकलेली पोंगे (dead hearts) तपासा. फुटवे मोजा (लक्ष्य: ४-५ मजबूत फुटवे).",
-            "kn": "ಕಾಂಡಕೋರಕ ಬಾಧೆಯನ್ನು ಸೂಚಿಸುವ ಒಣಗಿದ ಸುಳಿಯನ್ನು ಪರಿಶೀಲಿಸಿ. ಯಾದೃಚ್ಛಿಕವಾಗಿ ಪಿಲಕೆಗಳನ್ನು ಎಣಿಸಿ (ಗುರಿ 4-5 ಬಲವಾದ ಪಿಲಕೆಗಳು).",
+            "kn": "ಕಾಂಡಕೋರಕ ಬಾಧೆಯನ್ನು ಸೂಚಿಸುವ ಒಣಗಿದ ಸುಳಿಯನ್ನು ಪರಿಶೀಲಿಸಿ. ಯಾದೃಚ್ಛಿಕವಾಗಿ ಪಿಲಕೆಗಳನ್ನು ಎಣಿಸಿ (ಗುри 4-5 ಬಲವಾದ ಪಿಲಕೆಗಳು).",
             "te": "కాండం తొలిచే పురుగు ఉధృతిని సూచించే ఎండిపోయిన సుడిని తనిఖీ చేయండి. పిలకలను లెక్కించండి (లక్ష్యం 4-5 బలమైన పిలకలు)."
         }
     elif days_passed < 90:
@@ -145,7 +142,7 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         action = {
             "en": "Perform light earthing-up using a ridge-cultivator. If broad-leaf weeds or nut grass are visible, spray Halosulfuron-methyl at 36g/acre.",
             "mr": "रिजर-कल्टिव्हेटरचा वापर करून हलकी भर द्या. रुंद पानाच्या पिकांचे तण किंवा लव्हाळा दिसल्यास ३६ ग्रॅम/एकर हॅलोसल्फ्युरॉन-मिथाईल फवारा.",
-            "kn": "ರಿಡ್ಜ್-ಕಲ್ಟಿವೇಟರ್ ಬಳಸಿ ಲಘುವಾಗಿ ಮಣ್ಣು ಏರಿಸಿ. ಅಗಲವಾದ ಕಳೆಗಳು ಅಥವಾ ಜೇಕು ಹುಲ್ಲು ಕಂಡುಬಂದರೆ ಎಕರೆಗೆ 36g ಹ್ಯಾಲೋಸಲ್ಫ್ಯೂರೋನ್-ಮಿಥೈಲ್ ಸಿಂಪಡಿಸಿ.",
+            "kn": "ರಿಡ್ಜ್-ಕಲ್ಟಿವೇಟರ್ ಬಳಸಿ ಲಘುವಾಗಿ ಮಣ್ಣು ಏರಿಸಿ. ಅಗಲವಾದ ಕಳೆಗಳು ಅಥವಾ ಜೇಕು ಹುಲ್ಲು ಕಂಡುಬಂದರೆ ಎಕರೆಗೆ 36g ಹ್ಯಾಲೋಸಲ್ఫ್ಯೂರೋನ್-ಮಿಥೈಲ್ ಸಿಂಪಡಿಸಿ.",
             "te": "రిడ్జ్-కల్టివేటర్ ఉపయోగించి తేలికగా మట్టిని چڑھించండి. వెడల్పాటి కలుపు మొక్కలు లేదా తుంగ కనిపిస్తే ఎకరాకు 36 గ్రాముల హాలోసల్ఫ్యూరాన్-మిథైల్ పిచికారీ చేయండి."
         }
         obs = {
@@ -159,7 +156,7 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         action = {
             "en": "Inject Bio-Bramha Biostimulant via drip system/Drenching to transition the crop into accelerated cell division.",
             "mr": "पिकाला जलद पेशी विभाजनाच्या अवस्थेत नेण्यासाठी ठिबक किंवा ड्रेंचिंगद्वारे बायो-ब्रह्मा बायोस्टिम्युलंट द्या.",
-            "kn": "ಬೆಳೆಯನ್ನು ತ್ವರಿತ ಜೀವಕೋಶ ವಿಭಜನೆಗೆ ಪರಿವರ್ತಿಸಲು ಡ್ರಿಪ್ ಸಿಸ್ಟಮ್/ಡ್ರೆಂಚಿಂಗ್ ಮೂಲಕ ಬಯೋ-ಬ್ರಹ್ಮ ಬಯೋಸ್ಟಿಮ್ಯುಲಂಟ್ ನೀಡಿ.",
+            "kn": "ಬೆಳೆಯನ್ನು ತ್ವರಿత ಜೀವಕೋಶ ವಿಭಜನೆಗೆ ಪರಿವರ್ತಿಸಲು ಡ್ರಿಪ್ ಸಿಸ್ಟಮ್/ಡ್ರೆಂಚಿಂಗ್ ಮೂಲಕ ಬಯೋ-ಬ್ರಹ್ಮ ಬಯೋಸ್ಟಿಮ್ಯುಲಂಟ್ ನೀಡಿ.",
             "te": "పంటను వేగవంతమైన కణ విభజన దశకు మార్చడానికి డ్రిప్ లేదా డ్రెంచింగ్ ద్వారా బయో-బ్రహ్మ బయోస్టిమ్యులెంట్ అందించండి."
         }
         obs = {
@@ -245,7 +242,6 @@ def generate_agronomy_rules(crop: str, lang: str, sowing_date_str: str) -> str:
         f"👁️ FIELD OBSERVATION CHECKLIST:\n{obs[l_key]}"
     )
 
-# 2. Database Initialization
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -264,7 +260,6 @@ def init_db():
 
 init_db()
 
-# 3. Model Definition Validations
 class PlotForm(BaseModel):
     farmer_name: str
     phone_number: str
@@ -276,7 +271,6 @@ class PlotForm(BaseModel):
 class AdminLogin(BaseModel):
     password: str
 
-# 4. GET Endpoint (Reads parameters dynamically from frontend toggles)
 @app.get("/api/plots")
 def get_plots(lang: str = "en"):
     conn = sqlite3.connect(DB_PATH)
@@ -284,7 +278,6 @@ def get_plots(lang: str = "en"):
     try:
         cursor.execute("SELECT owner_name, phone_number, crop, acreage, sowing_date FROM plots")
         rows = cursor.fetchall()
-        
         return [
             {
                 "owner_name": r[0],
@@ -301,10 +294,21 @@ def get_plots(lang: str = "en"):
     finally:
         conn.close()
 
-# 5. POST Endpoint: Plot Registration
 @app.post("/api/plots")
 def register_plot(form: PlotForm):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
-        cursor.execute
+        cursor.execute(
+            "INSERT INTO plots (owner_name, phone_number, crop, acreage, sowing_date) VALUES (?, ?, ?, ?, ?)",
+            (form.farmer_name, form.phone_number, form.crop, form.acreage, form.date)
+        )
+        conn.commit()
+        return {"message": "Plot registration successful."}
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+@app.post("/api/admin/login")
+def admin_l
