@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B'OS Platform Dashboard</title>
+    <title>B'OS Platform</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; color: #333; }
         
-        /* Top Navigation Bar Styles */
+        /* Top Navigation Bar */
         .navbar { background-color: #1b4d3e; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .nav-brand { font-size: 20px; font-weight: bold; cursor: pointer; }
         .nav-controls { display: flex; gap: 15px; align-items: center; }
@@ -16,14 +16,16 @@
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         .hidden { display: none !important; }
         
-        /* View Panel Layouts */
+        /* Dashboard Layout */
         .dashboard-grid { display: flex; flex-wrap: wrap; gap: 25px; }
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); flex: 1; min-width: 320px; }
         
-        /* Form & Button Items */
+        /* Forms & Interactive Elements */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        
+        /* Buttons */
         .btn { border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background 0.2s; }
         .btn-green { background-color: #2e7d32; color: white; }
         .btn-green:hover { background-color: #1b5e20; }
@@ -31,10 +33,11 @@
         .btn-blue:hover { background-color: #01579b; }
         .btn-outline { background-color: transparent; border: 1px solid white; color: white; }
         .btn-outline:hover { background-color: rgba(255,255,255,0.1); }
-        .lang-btn { background-color: rgba(255,255,255,0.2); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        
+        .lang-btn { background-color: rgba(255,255,255,0.2); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; }
         .lang-btn.active { background-color: white; color: #1b4d3e; }
         
-        /* Advisory Elements */
+        /* Advisory Output Cards */
         .verification-badge { background-color: #e8f5e9; color: #2e7d32; padding: 10px 14px; border-radius: 4px; font-weight: bold; margin-bottom: 20px; font-size: 14px; }
         .advisory-box { background-color: #fffde7; padding: 18px; border-left: 5px solid #2e7d32; margin-top: 15px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.6; white-space: pre-line; box-shadow: inset 0 0 5px rgba(0,0,0,0.02); }
         .plot-card { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
@@ -61,7 +64,7 @@
         
         <div id="home-view" class="card" style="text-align: center; max-width: 600px; margin: 40px auto;">
             <h2 id="home-welcome">Welcome to B'OS Crop Engine</h2>
-            <p style="color: #666; margin-bottom: 30px;">Select your workspace view application role portal below:</p>
+            <p style="color: #666; margin-bottom: 30px;">Select your workspace role to manage crop timelines:</p>
             <div style="display: flex; gap: 20px; justify-content: center;">
                 <button class="btn btn-green" style="padding: 15px 30px; font-size: 16px;" onclick="enterRole('farmer')">Farmer Dashboard</button>
                 <button class="btn btn-blue" style="padding: 15px 30px; font-size: 16px;" onclick="enterRole('admin')">Advisor Console</button>
@@ -102,7 +105,7 @@
                     <div class="form-group">
                         <label id="lbl-crop">Crop Type</label>
                         <select id="crop-type">
-                            <option value="sugarcane">Sugarcane</option>
+                            <option value="sugarcane">Sugarcane / ಕಬ್ಬು</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -116,19 +119,19 @@
                     <button class="btn btn-green" style="width: 100%; font-size: 16px; padding: 12px;" onclick="handleRegistration()">Register Layout</button>
                 </div>
 
-                <div class="card">
+                <div class="card" style="flex: 1.5;">
                     <h2 id="dash-title">Active Regional Plots</h2>
                     <div class="verification-badge" id="verify-status">
-                        ✅ Verified: Displaying active logging datasets
+                        ✅ Verified: Displaying active tracking layout datasets
                     </div>
                     
                     <div id="plots-container"></div>
 
                     <div id="advisor-only-console" class="hidden" style="margin-top: 35px; border-top: 2px solid #eee; padding-top: 25px;">
                         <h3 id="log-title" style="color: #01579b;">Advisor Communication Console</h3>
-                        <p style="font-size: 13px; color: #555;">Broadcast advisory updates or record direct phone summaries:</p>
-                        <textarea id="comm-log" style="width: 100%; height: 110px; border-radius: 4px; border: 1px solid #ccc; padding: 12px; box-sizing: border-box; font-size: 14px;"></textarea>
-                        <button class="btn btn-blue" style="margin-top: 10px; width: 100%;" onclick="alert('Log entry updated successfully.')">Save Communication Log</button>
+                        <p style="font-size: 13px; color: #555;">Broadcast updates or document verification summary milestones:</p>
+                        <textarea id="comm-log" style="width: 100%; height: 110px; border-radius: 4px; border: 1px solid #ccc; padding: 12px; box-sizing: border-box; font-size: 14px; font-family: inherit;" placeholder="Type logs here..."></textarea>
+                        <button class="btn btn-blue" style="margin-top: 10px; width: 100%;" onclick="alert('Communication log updated.')">Save Communication Log</button>
                     </div>
                 </div>
 
@@ -142,9 +145,10 @@
         let activeLanguage = 'en';
         let currentUserRole = 'guest';
 
+        // Direct multi language static interface headers object mapper map
         const uiLabels = {
             en: { reg: "Plot Registration", verify: "Mobile Verification", name: "Farmer Name", phone: "Mobile Number", crop: "Crop Type", date: "Sowing Date", acreage: "Acreage", dash: "Active Regional Plots", log: "Advisor Communication Console", badge: "Role: ", actionLogin: "Login as Advisor", actionLogout: "Exit System" },
-            kn: { reg: "ಹೊಲದ ಮಾಹಿತಿ ನೋಂದಣಿ", verify: "ಮೊಬೈಲ್ ದೃಢೀಕರಣ", name: "ರೈತರ ಹೆಸರು", phone: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", crop: "ಬೆಳೆ ಮಾದरी", date: "ಬಿತ್ತನೆ ದಿನಾಂಕ", acreage: "ಎಕರೆ ವಿಸ್ತೀರ್ಣ", dash: "ಸಕ್ರಿಯ ಪ್ಲಾಟ್‌ಗಳು", log: "ಸಂವಹನ ಲಾಗ್ ಕನ್ಸೋಲ್", badge: "ಪಾತ್ರ: ", actionLogin: "ಸಲಹೆಗಾರರ ಲಾಗಿನ್", actionLogout: "ಹೊರಹೋಗಿ" },
+            kn: { reg: "ಹೊಲದ ಮಾಹಿತಿ ನೋಂದಣಿ", verify: "ಮೊಬೈಲ್ ದೃಢೀಕರಣ", name: "ರೈತರ ಹೆಸರು", phone: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", crop: "ಬೆಳೆ ಮಾದರಿ", date: "ಬಿತ್ತನೆ ದಿನಾಂಕ", acreage: "ಎಕರೆ ವಿಸ್ತೀರ್ಣ", dash: "ಸಕ್ರಿಯ ಪ್ಲಾಟ್‌ಗಳು", log: "ಸंವಹನ ಲಾಗ್ ಕನ್ಸೋಲ್", badge: "ಪಾತ್ರ: ", actionLogin: "ಸಲಹೆಗಾರರ ಲಾಗಿನ್", actionLogout: "ಹೊರಹೋಗಿ" },
             mr: { reg: "प्लॉट नोंदणी", verify: "मोबाईल पडताळणी", name: "शेतकऱ्याचे नाव", phone: "मोबाईल नंबर", crop: "पिकाचा प्रकार", date: "पेरणीची तारीख", acreage: "एकर क्षेत्र", dash: "सक्रिय प्लॉट", log: "सल्लागार संभाषण लॉग", badge: "भूमिका: ", actionLogin: "सल्लागार लॉगिन", actionLogout: "बाहेर पडा" },
             te: { reg: "ప్లాట్ రిజిస్ట్రేషన్", verify: "మొబైల్ వెరిఫికేషన్", name: "రైతు పేరు", phone: "మొబైల్ సంఖ్య", crop: "పంట రకం", date: "విత్తన తేదీ", acreage: "ఎకరాల వైశాల్యం", dash: "క్రియాశీల ప్లాట్లు", log: "సలహాదారు కమ్యూనికేషన్ లాగ్", badge: "పాత్ర: ", actionLogin: "అడ్వైజర్ లాగిన్", actionLogout: "నిష్క్రమించు" }
         };
@@ -170,6 +174,7 @@
             }
         }
 
+        // POST Request: Fixes the password login submission endpoint connection
         async function submitAdminPassword() {
             const password = document.getElementById('admin-password-input').value;
             try {
@@ -178,20 +183,22 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password: password })
                 });
+                
                 const result = await response.json();
+                
                 if (result.status === "success") {
                     currentUserRole = 'admin';
                     document.getElementById('active-role-display').innerText = (uiLabels[activeLanguage].badge) + "Advisor";
                     document.getElementById('nav-action-btn').innerText = uiLabels[activeLanguage].actionLogout;
                     document.getElementById('advisor-only-console').classList.remove('hidden');
-                    document.getElementById('registration-card-panel').classList.add('hidden'); // Advisors only view logs
+                    document.getElementById('registration-card-panel').classList.add('hidden'); // Advisors don't need the form
                     showView('workspace-view');
                     syncPlotsData();
                 } else {
                     alert("Access Denied: " + result.message);
                 }
             } catch (err) {
-                alert("Authentication server interface error.");
+                alert("Authentication check failed. Backend server response timeout error.");
             }
         }
 
@@ -207,11 +214,11 @@
             }
         }
 
+        // Handles changing the interface strings and refreshing the backend translation query parameters
         function setLanguage(langCode) {
             activeLanguage = langCode;
             document.documentElement.lang = langCode;
             
-            // Toggle highlight styles across global language control panel buttons
             ['en', 'mr', 'kn', 'te'].forEach(c => {
                 document.getElementById(`btn-${c}`).classList.remove('active');
             });
@@ -236,9 +243,11 @@
                 document.getElementById('nav-action-btn').innerText = labels.actionLogin;
             }
 
+            // Instantly trigger database data download with newly selected language variable parameter query!
             syncPlotsData();
         }
 
+        // POST Request: Registers new plot, passing correct phone_number parameters
         async function handleRegistration() {
             const name = document.getElementById('farmer-name').value;
             const phone = document.getElementById('farmer-phone').value;
@@ -255,7 +264,14 @@
                 const response = await fetch(`${API_BASE_URL}/api/plots`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ farmer_name: name, phone_number: phone, crop: crop, acreage: parseInt(acreage), date: date, lang: activeLanguage })
+                    body: JSON.stringify({ 
+                        farmer_name: name, 
+                        phone_number: phone, 
+                        crop: crop, 
+                        acreage: parseInt(acreage), 
+                        date: date, 
+                        lang: activeLanguage 
+                    })
                 });
                 if(response.ok) {
                     alert("Registration Successful!");
@@ -266,19 +282,22 @@
                     syncPlotsData();
                 }
             } catch (err) {
-                console.error(err);
+                console.error("Error submitting plot metadata payload configuration:", err);
             }
         }
 
+        // GET Request: Fetches data cards passing dynamic ?lang= code to draw content translations on screen
         async function syncPlotsData() {
             if (currentUserRole === 'guest') return;
             try {
+                // Pass language down to main.py matrix selection algorithms
                 const response = await fetch(`${API_BASE_URL}/api/plots?lang=${activeLanguage}`);
                 const plots = await response.json();
                 const container = document.getElementById('plots-container');
                 
                 if (container) {
                     container.innerHTML = "";
+                    
                     plots.forEach(plot => {
                         const card = document.createElement('div');
                         card.className = 'plot-card';
@@ -294,6 +313,7 @@
                         const dateHeader = { en: "Date", kn: "ದಿನಾಂಕ", mr: "तारीख", te: "తేదీ" }[activeLanguage] || "Date";
                         const unitHeader = { en: "acres", kn: "ಎಕರೆಗಳು", mr: "एकर", te: "ఎకరాలు" }[activeLanguage] || "acres";
 
+                        // Generates localized field structure display boxes cleanly on the grid layouts
                         card.innerHTML = `
                             <h3><strong>${plot.owner_name}</strong> — ${cropLabel}</h3>
                             <p style="color: #666; font-size: 13px; margin: 5px 0 12px 0;">📖 ${detailsHeader}: ${plot.acreage} ${unitHeader} | 📅 ${dateHeader}: ${plot.date}</p>
@@ -303,12 +323,13 @@
                     });
                 }
             } catch (error) {
-                console.error(error);
+                console.error("Layout dashboard sync iteration error encountered:", error);
             }
         }
 
-        // Initialize display context view setting default to home portal page selection layout
+        // Run default initialization variables configuration setups
         showView('home-view');
+        // Automated background sync loops update checking cycles every 10 seconds
         setInterval(syncPlotsData, 10000);
     </script>
 </body>
