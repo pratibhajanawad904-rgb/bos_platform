@@ -4,7 +4,7 @@ const API_BASE_URL = "https:bos-app.onrender.com"; // Auto-maps port if running 
 // 1. Function to save user data to Firestore via FastAPI backend
 async function saveUserData(userId, name, email) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/save-data`, {
+        const response = await fetch(`${API_BASE_URL}/api/plots`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
