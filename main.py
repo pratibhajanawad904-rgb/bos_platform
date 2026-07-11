@@ -160,9 +160,9 @@ class PlotForm(BaseModel):
     date: str
     lang: str = "en"
 
-# 4. GET Endpoint
+# 4. GET Endpoint (Now dynamic based on user language choice)
 @app.get("/api/plots")
-def get_plots():
+def get_plots(lang: str = "en"):  # Added a language parameter to capture selection!
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
@@ -176,7 +176,8 @@ def get_plots():
                 "crop": r[2],
                 "acreage": r[3],
                 "date": r[4],
-                "advisory": generate_agronomy_rules(r[2], "en", r[4])
+                # Pass the dynamically requested language ('lang') instead of fixing it to "en"
+                "advisory": generate_agronomy_rules(r[2], lang, r[4])
             }
             for r in rows
         ]
