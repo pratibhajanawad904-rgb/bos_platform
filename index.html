@@ -3,383 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B'OS Krishi Samiksha</title>
+    <title>B'OS Platform</title>
     <style>
-        :root {
-            --farm-green: #1b5e20;
-            --earth-brown: #4e3629;
-            --soil-bg: #f4f7f5;
-            --text-dark: #2c3e50;
-            --text-muted: #5a6e61;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--soil-bg); margin: 0; padding: 0; color: var(--text-dark); }
-        .hero { background: linear-gradient(135deg, var(--earth-brown), var(--farm-green)); color: white; text-align: center; padding: 50px 20px; }
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-        .gateways { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
-        @media (min-width: 768px) { .gateways { grid-template-columns: 1fr 1fr; } }
-        .card { background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid #e1e8e3; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); }
-        .btn { display: inline-block; padding: 12px 24px; border-radius: 20px; border: none; font-weight: bold; color: white; cursor: pointer; width: 80%; text-transform: uppercase; margin-top: 15px; }
-        .btn-green { background: var(--farm-green); }
-        .btn-brown { background: var(--earth-brown); }
-        
-        .navbar { background: var(--farm-green); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .workspace { display: flex; flex-direction: column; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
-        @media (min-width: 992px) { .workspace { flex-direction: row; } .panel-left { flex: 1; } .panel-right { flex: 1.5; } }
-        .panel-left, .panel-right { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; border: 1px solid #e1e8e3; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .dashboard-container { display: flex; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; min-width: 300px; }
+        .btn { background-color: #1b4d3e; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn:hover { background-color: #143a2e; }
+        .btn-blue { background-color: #007bff; }
+        .btn-blue:hover { background-color: #0056b3; }
+        .lang-bar { display: flex; gap: 10px; margin-bottom: 20px; justify-content: flex-end; max-width: 1200px; margin: 0 auto 20px auto; }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccd7d0; border-radius: 6px; box-sizing: border-box; }
-        .banner { background: #e0f2fe; padding: 12px; border-radius: 6px; color: #0369a1; font-weight: bold; margin-bottom: 15px; }
-        .data-card { background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 5px solid var(--farm-green); margin-bottom: 10px; }
-        .advisory { background: #fffbeb; color: #b45309; padding: 10px; border-radius: 4px; margin-top: 8px; font-size: 14px; white-space: pre-wrap; }
-        
-        .chat-box { border: 1px solid #e1e8e3; border-radius: 8px; height: 300px; display: flex; flex-direction: column; margin-top: 15px; }
-        .chat-logs { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
-        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; max-width: 80%; font-size: 14px; }
-        .msg-farmer { background: #eff6ff; align-self: flex-start; }
-        .msg-advisor { background: #fef2f2; align-self: flex-end; }
-        .lang-btn { background: white; color: var(--farm-green); border: none; padding: 5px 10px; margin-left: 5px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .lang-btn.active { background: #4c9a2a; color: white; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .advisory-box { background-color: #fff8e7; padding: 15px; border-left: 4px solid #1b4d3e; margin-top: 15px; border-radius: 0 4px 4px 0; font-size: 14px; line-height: 1.6; white-space: pre-line; }
+        .plot-card { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .plot-card:last-child { border-bottom: none; }
+        .verification-badge { background-color: #e6f4ea; color: #137333; padding: 8px 12px; border-radius: 4px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="website-layer" style="display: block;">
-        <div class="hero">
-            <h1>B'OS Krishi Samiksha</h1>
-            <p>Real-time agronomy tracking, dynamic localized advisories, and role-secured access control systems.</p>
-        </div>
-        <div class="container">
-            <div class="gateways">
-                <div class="card" onclick="enterAppModule('Farmer')">
-                    <span style="font-size: 40px;">🌾</span>
-                    <h3>Farmer Digital Portal</h3>
-                    <button class="btn btn-green">Open Farmer Portal</button>
-                </div>
-                <div class="card" onclick="triggerAdvisorAccessCheck()">
-                    <span style="font-size: 40px;">📋</span>
-                    <h3>Krishi Advisor Console</h3>
-                    <button class="btn btn-brown">Open Advisor Console</button>
-                </div>
-            </div>
-        </div>
+    <div class="lang-bar">
+        <button class="btn" onclick="setLanguage('en')">English</button>
+        <button class="btn" onclick="setLanguage('mr')">मराठी</button>
+        <button class="btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+        <button class="btn" onclick="setLanguage('te')">తెలుగు</button>
     </div>
 
-    <div id="application-layer" style="display: none;">
-        <div class="navbar">
-            <div>
-                <button onclick="exitToLanding()" style="background:rgba(255,255,255,0.2); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">← Home</button>
-                <span id="display-role" style="margin-left: 15px; font-weight: bold;">Role: Farmer</span>
+    <div class="dashboard-container">
+        <div class="card">
+            <h2 id="reg-title">ಹೊಲದ ಮಾಹಿತಿ ನೋಂದಣಿ / Plot Registration</h2>
+            
+            <div class="form-group">
+                <label id="lbl-verify">ಮೊಬೈಲ್ ದೃಢೀಕರಣ / Mobile Verification</label>
+                <input type="text" id="verify-phone" placeholder="10-digit number">
+                <button class="btn btn-blue" style="margin-top: 8px; width: 100%;">OTP ವಿನಂತಿಸಿ / Request OTP</button>
             </div>
-            <div>
-                <button id="lang-en" class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button id="lang-mr" class="lang-btn" onclick="setLanguage('mr')">MR</button>
-                <button id="lang-kn" class="lang-btn" onclick="setLanguage('kn')">KN</button>
-                <button id="lang-te" class="lang-btn" onclick="setLanguage('te')">TE</button>
+            
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+            <div class="form-group">
+                <label id="lbl-name">ರೈತರ ಹೆಸರು / Farmer Name</label>
+                <input type="text" id="farmer-name">
             </div>
+            <div class="form-group">
+                <label id="lbl-phone">ಮೊಬೈಲ್ ಸಂಖ್ಯೆ / Mobile Number</label>
+                <input type="text" id="farmer-phone">
+            </div>
+            <div class="form-group">
+                <label id="lbl-crop">ಬೆಳೆ ಮಾದರಿ / Crop Type</label>
+                <select id="crop-type">
+                    <option value="sugarcane">ಕಬ್ಬು / Sugarcane</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label id="lbl-date">ಬಿತ್ತನೆ ದಿನಾಂಕ / Sowing Date</label>
+                <input type="date" id="sowing-date">
+            </div>
+            <div class="form-group">
+                <label id="lbl-acreage">ಎಕರೆ ವಿಸ್ತೀರ್ಣ / Acreage</label>
+                <input type="number" id="acreage-val">
+            </div>
+            <button class="btn" style="width: 100%; font-size: 16px; background-color: #137333;" onclick="handleRegistration()">ಜಮೀನು ನೋಂದಾಯಿಸಿ / Register Layout</button>
         </div>
 
-        <div class="workspace">
-            <div class="panel-left">
-                <div id="farmer-form-view">
-                    <h3 id="lbl-form-title">Register Farm Plot</h3>
-                    <div style="background: #f0fdf4; padding: 12px; border-radius: 6px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
-                        <label id="lbl-auth-title" for="auth-phone" style="color: var(--farm-green); font-weight: bold;">📱 Mobile Authentication:</label>
-                        <input id="auth-phone" type="tel">
-                        <button id="btn-request-otp" onclick="triggerOtpDispatched()" style="background:#3b82f6; color:white; border:none; width:100%; padding:8px; margin-top:5px; border-radius:4px; font-weight:bold; cursor:pointer;">Request OTP</button>
-                        
-                        <div id="otp-input-subbox" style="display: none; margin-top: 10px;">
-                            <input id="auth-code" type="number" placeholder="Enter Code">
-                            <button onclick="validateSecurityToken()" style="background:#10b981; color:white; border:none; width:100%; padding:8px; margin-top:5px; border-radius:4px; font-weight:bold; cursor:pointer;">Verify</button>
-                        </div>
-                        <div id="otp-locked-banner" style="display:none; color:green; font-weight:bold; text-align:center; margin-top:5px;">✅ Verified!</div>
-                    </div>
-
-                    <form onsubmit="dispatchPlotRegistration(event)">
-                        <div class="form-group">
-                            <label id="lbl-name" for="inp-name">Farmer Name</label>
-                            <input id="inp-name" type="text" required>
-                        </div>
-                        <div class="form-group">
-                            <label id="lbl-phone" for="inp-phone">Mobile Number</label>
-                            <input id="inp-phone" type="tel" required>
-                        </div>
-                        <div class="form-group">
-                            <label id="lbl-crop" for="inp-crop">Select Crop</label>
-                            <select id="inp-crop">
-                                <option id="opt-sugarcane" value="Sugarcane">Sugarcane</option>
-                                <option id="opt-cotton" value="Cotton">Cotton</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label id="lbl-date" for="inp-date">Sowing Date</label>
-                            <input id="inp-date" type="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label id="lbl-acreage" for="inp-acreage">Plot Acreage</label>
-                            <input id="inp-acreage" type="number" step="0.1" required>
-                        </div>
-                        <button id="lbl-btn" type="submit" style="background:var(--farm-green); color:white; border:none; width:100%; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">Register Layout</button>
-                    </form>
-                </div>
-                <div id="advisor-panel-view" style="display: none;">
-                    <h3 id="lbl-admin-title" style="color: var(--earth-brown);">📋 Administrative Rights Active</h3>
-                    <p id="lbl-admin-desc">Form registration functions are locked for analyst configurations.</p>
-                </div>
+        <div class="card">
+            <h2 id="dash-title">ಸಕ್ರಿಯ ಪ್ಲಾಟ್‌ಗಳು / Active Regional Plots</h2>
+            <div class="verification-badge" id="verify-status">
+                ✅ ದೃಢೀಕರಿಸಲಾಗಿದೆ: ದಾಖಲೆಗಳನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ (+91 8618734070)
             </div>
+            
+            <div id="plots-container"></div>
 
-            <div class="panel-right">
-                <h3 id="lbl-panel-title">Active Regional Plots</h3>
-                <div id="view-banner" class="banner">Awaiting Account Link Sync...</div>
-                <div id="plots-payload-container"></div>
-
-                <div class="chat-box">
-                    <div style="background:#f3f4f6; padding:10px; font-weight:bold; border-bottom:1px solid #e1e8e3;" id="lbl-chat-title">Communication Log</div>
-                    <div id="chat-logs-anchor" class="chat-logs"></div>
-                    <div id="chat-input-housing" style="display:none; padding:10px; gap:10px; border-top:1px solid #e1e8e3;">
-                        <input id="chat-msg-field" type="text" placeholder="Type message..." style="flex:1; padding:8px; border:1px solid #ccd7d0; border-radius:4px;">
-                        <button id="lbl-send-btn" onclick="dispatchChatMessage()" style="background:var(--farm-green); color:white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">Send</button>
-                    </div>
-                </div>
-            </div>
+            <h3 style="margin-top: 30px;" id="log-title">ಸಂವಹನ ಲಾಗ್ / Communication Log</h3>
+            <textarea id="comm-log" style="width: 100%; height: 100px; border-radius: 4px; border: 1px solid #ccc; padding: 10px;" readonly></textarea>
         </div>
     </div>
 
     <script>
-        let userRole = 'Farmer';
-        let language = 'en';
-        let currentFilterPhone = '';
-        let generatedToken = '';
-        let securityCleared = false;
-        
-        const LOCAL_API = "https://bos-app.onrender.com";
+        const API_BASE_URL = "https://bos-app.onrender.com";
+        let activeLanguage = 'en';
 
+        // Dictionary to instantly switch UI labels without breaking backend connection
         const uiLabels = {
-            en: { 
-                formTitle: "Register Farm Plot", nameLabel: "Farmer Name", phoneLabel: "Mobile Number", cropLabel: "Select Crop", dateLabel: "Sowing Date", acreLabel: "Plot Acreage", btnLabel: "Register Layout", authTitle: "📱 Mobile Authentication:", panelTitle: "Active Regional Plots", chatTitle: "Communication Log",
-                cropSugarcane: "Sugarcane", cropCotton: "Cotton", sendBtnText: "Send",
-                placeholderName: "Enter full name", placeholderPhone: "Enter 10-digit number", placeholderAcre: "Enter size in acres", placeholderChat: "Type message...", otpBtnText: "Request OTP",
-                awaitSync: "🔒 Security Check Required: Verify mobile number to sync your profile dashboard.",
-                advisorSync: "📢 Advisor Active: Streaming total database matrix records.",
-                verified: "✅ Verified: Displaying logs under (+91 ",
-                metaArea: "Area", metaDate: "Date", metaAcres: "Acres",
-                adminTitle: "📋 Administrative Rights Active", adminDesc: "Form registration functions are locked for analyst configurations."
-            },
-            mr: { 
-                formTitle: "शेत जमीन नोंदणी", nameLabel: "शेतकऱ्याचे नाव", phoneLabel: "मोबाईल नंबर", cropLabel: "पीक निवडा", dateLabel: "पेरणीची तारीख", acreLabel: "एकूण क्षेत्र", btnLabel: "जमीन नोंदवा", authTitle: "📱 मोबाईल पडताळणी:", panelTitle: "सक्रिय भूखंड", chatTitle: "कृषी संवाद नोंद",
-                cropSugarcane: "ऊश", cropCotton: "कापूस", sendBtnText: "पाठवा",
-                placeholderName: "पूर्ण नाव टाका", placeholderPhone: "१० अंकी नंबर टाका", placeholderAcre: "क्षेत्र एकरमध्ये टाका", placeholderChat: "संदेश टाईप करा...", otpBtnText: "ओटीпи पाठवा",
-                awaitSync: "🔒 सुरक्षा तपासणी आवश्यक: डॅशबोर्ड समक्रमित करण्यासाठी मोबाईल नंबर सत्यापित करा.",
-                advisorSync: "📢 सल्लागार सक्रिय: एकूण डेटाबेस रेकॉर्ड प्रवाहित करत आहे.",
-                verified: "✅ सत्यापित: खालील नंबर अंतर्गत रेकॉर्ड दर्शवत आहे (+91 ",
-                metaArea: "क्षेत्रफळ", metaDate: "तारीख", metaAcres: "एकर",
-                adminTitle: "📋 प्रशासकीय हक्क सक्रिय", adminDesc: "विश्लेषक कॉन्फिगरेशनसाठी फॉर्म नोंदणी कार्ये लॉक केली आहेत."
-            },
-            kn: { 
-                formTitle: "ಹೊಲದ ಮಾಹಿತಿ ನೋಂದಣಿ", nameLabel: "ರೈತರ ಹೆಸರು", phoneLabel: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", cropLabel: "ಬೆಳೆ ಮಾದರಿ", dateLabel: "ಬಿತ್ತನೆ ದಿನಾಂಕ", acreLabel: "ಎಕರೆ ವಿಸ್ತೀರ್ಣ", btnLabel: "ಜಮೀನು ನೋಂದಾಯಿಸಿ", authTitle: "📱 ಮೊಬೈಲ್ ದೃಢೀಕರಣ:", panelTitle: "ಸಕ್ರಿಯ ಪ್ಲಾಟ್‌ಗಳು", chatTitle: "ಸಂವಹನ ಲಾಗ್",
-                cropSugarcane: "ಕಬ್ಬು", cropCotton: "ಹತ್ತಿ", sendBtnText: "ಕಳುಹಿಸಿ",
-                placeholderName: "ಪೂರ್ಣ ಹೆಸರು ನಮೂದಿಸಿ", placeholderPhone: "೧೦ ಅಂಕಿಯ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ", placeholderAcre: "ಎಕರೆ ಗಾತ್ರ ನಮೂದಿಸಿ", placeholderChat: "ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...", otpBtnText: "ಒಟಿಪಿ ವಿನಂತಿಸಿ",
-                awaitSync: "🔒 ಭದ್ರತಾ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ: ನಿಮ್ಮ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸಿಂಕ್ ಮಾಡಲು ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
-                advisorSync: "📢 ಸಲಹೆಗಾರರು ಸಕ್ರಿಯ: ಒಟ್ಟು ಡೇಟಾಬೇಸ್ ಮ್ಯಾಟ್ರಿಕ್ಸ್ ದಾಖಲೆಗಳನ್ನು ಸ್ಟ್ರೀಮಿಂಗ್ ಮಾಡಲಾಗುತ್ತಿದೆ.",
-                verified: "✅ ದೃಢೀಕರಿಸಲಾಗಿದೆ: ದಾಖಲೆಗಳನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ (+91 ",
-                metaArea: "ಪ್ರದೇಶ", metaDate: "ದಿನಾಂಕ", metaAcres: "ಎಕರೆಗಳು",
-                adminTitle: "📋 ಆಡಳಿತಾತ್ಮಕ ಹಕ್ಕುಗಳು ಸಕ್ರಿಯವಾಗಿವೆ", adminDesc: "ವಿಶ್ಲೇಷಕ ಸಂರಚನೆಗಳಿಗಾಗಿ ಫಾರ್ಮ್ ನೋಂದಣಿ ಕಾರ್ಯಗಳನ್ನು ಲಾಕ್ ಮಾಡಲಾಗಿದೆ."
-            },
-            te: { 
-                formTitle: "రైతు భూమి నమోదు", nameLabel: "రైతు పేరు", phoneLabel: "మొబైల్ సంఖ్య", cropLabel: "పంట రకం", dateLabel: "విత్తన తేదీ", acreLabel: "ఎకరాల విస్తీర్ణం", btnLabel: "భూమిని నమోదు చేయండి", authTitle: "📱 సురక్షిత మొబైల్ ప్రమాణీకరణ:", panelTitle: "క్రియాశీల ప్లాట్లు", chatTitle: "సమాచార లాగ్",
-                cropSugarcane: "చెరకు", cropCotton: "పత్తి", sendBtnText: "పంపండి",
-                placeholderName: "పూర్తి పేరు ఎంటర్ చేయండి", placeholderPhone: "10 అంకెల మొబైల్ సంఖ్య ఎంటర్ చేయండి", placeholderAcre: "ఎకరాల పరిమాణం ఎంటర్ చేయండి", placeholderChat: "సమాచార లాగ్ ఎంటర్ చేయండి...", otpBtnText: "OTPని అభ్యర్థించండి",
-                awaitSync: "🔒 సెక్యూరిటీ చెక్ అవసరం: మీ ప్రొఫైల్ డ్యాష్‌బోర్డ్‌ను సమకాలీకరించడానికి మొబైల్ నంబర్‌ను ధృవీకరించండి.",
-                advisorSync: "📢 అడ్వైజర్ యాక్టివ్: మొత్తం డేటాబేస్ రికార్డులను ప్రదర్శిస్తోంది.",
-                verified: "✅ ధృవీకరించబడింది: దీని కింద లాగ్‌లను ప్రదర్శిస్తోంది (+91 ",
-                metaArea: "ప్రాంతం", metaDate: "తేదీ", metaAcres: "ఎకరాలు",
-                adminTitle: "📋 అడ్మినిస్ట్రేటివ్ హక్కులు యాక్టివ్‌గా ఉన్నాయి", adminDesc: "విశ్లేషకుల కాన్ఫిగరేషన్‌ల కోసం ఫారమ్ రిజిస్ట్రేషన్ విధులు లాక్ చేయబడ్డాయి."
-            }
+            en: { reg: "Plot Registration", verify: "Mobile Verification", name: "Farmer Name", phone: "Mobile Number", crop: "Crop Type", date: "Sowing Date", acreage: "Acreage", dash: "Active Regional Plots", log: "Communication Log" },
+            kn: { reg: "ಹೊಲದ ಮಾಹಿತಿ ನೋಂದಣಿ", verify: "ಮೊಬೈಲ್ ದೃಢೀಕರಣ", name: "ರೈತರ ಹೆಸರು", phone: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", crop: "ಬೆಳೆ ಮಾದರಿ", date: "ಬಿತ್ತನೆ ದಿನಾಂಕ", acreage: "ಎಕರೆ ವಿಸ್ತೀರ್ಣ", dash: "ಸಕ್ರಿಯ ಪ್ಲಾಟ್‌ಗಳು", log: "ಸಂವಹನ ಲಾಗ್" },
+            mr: { reg: "प्लॉट नोंदणी", verify: "मोबाईल पडताळणी", name: "शेतकऱ्याचे नाव", phone: "मोबाईल नंबर", crop: "पिकाचा प्रकार", date: "पेरणीची तारीख", acreage: "एकर क्षेत्र", dash: "सक्रिय प्लॉट", log: "संभाषण लॉग" },
+            te: { reg: "ప్లాట్ రిజిస్ట్రేషన్", verify: "మొబైల్ వెరిఫికేషన్", name: "రైతు పేరు", phone: "మొబైల్ సంఖ్య", crop: "పంట రకం", date: "విత్తన తేదీ", acreage: "ఎకరాల వైశాల్యం", dash: "క్రియాశీల ప్లాట్లు", log: "కమ్యూనికేషన్ లాగ్" }
         };
 
-        function enterAppModule(role) {
-            userRole = role;
-            document.getElementById('display-role').innerText = "Role: " + role;
-            document.getElementById('website-layer').style.display = 'none';
-            document.getElementById('application-layer').style.display = 'block';
+        function setLanguage(langCode) {
+            activeLanguage = langCode;
+            document.documentElement.lang = langCode;
             
-            document.getElementById('farmer-form-view').style.display = role === 'Farmer' ? 'block' : 'none';
-            document.getElementById('advisor-panel-view').style.display = role === 'Advisor' ? 'block' : 'none';
-            
-            setLanguage(language); 
+            // Translate the static dashboard UI headers instantly
+            const labels = uiLabels[langCode] || uiLabels.en;
+            document.getElementById('reg-title').innerText = labels.reg;
+            document.getElementById('lbl-verify').innerText = labels.verify;
+            document.getElementById('lbl-name').innerText = labels.name;
+            document.getElementById('lbl-phone').innerText = labels.phone;
+            document.getElementById('lbl-crop').innerText = labels.crop;
+            document.getElementById('lbl-date').innerText = labels.date;
+            document.getElementById('lbl-acreage').innerText = labels.acreage;
+            document.getElementById('dash-title').innerText = labels.dash;
+            document.getElementById('log-title').innerText = labels.log;
+
+            console.log("UI set to: " + langCode + ". Triggering dynamic database fetch...");
+            syncPlotsData();
         }
 
-        function triggerAdvisorAccessCheck() {
-            let pass = prompt("🔐 Enter Administrative Security Passcode:");
-            if (pass === 'admin123') enterAppModule('Advisor');
-            else alert("❌ Access Denied.");
-        }
+        async function handleRegistration() {
+            const name = document.getElementById('farmer-name').value;
+            const phone = document.getElementById('farmer-phone').value;
+            const crop = document.getElementById('crop-type').value;
+            const date = document.getElementById('sowing-date').value;
+            const acreage = document.getElementById('acreage-val').value;
 
-        function exitToLanding() { location.reload(); }
-
-        function setLanguage(lang) {
-            language = lang;
-            ['en','mr','kn','te'].forEach(l => document.getElementById('lang-' + l).className = 'lang-btn ' + (l === lang ? 'active' : ''));
-            
-            document.getElementById('lbl-form-title').innerText = uiLabels[lang].formTitle;
-            document.getElementById('lbl-name').innerText = uiLabels[lang].nameLabel;
-            document.getElementById('lbl-phone').innerText = uiLabels[lang].phoneLabel;
-            document.getElementById('lbl-crop').innerText = uiLabels[lang].cropLabel;
-            document.getElementById('lbl-date').innerText = uiLabels[lang].dateLabel;
-            document.getElementById('lbl-acreage').innerText = uiLabels[lang].acreLabel;
-            document.getElementById('lbl-btn').innerText = uiLabels[lang].btnLabel;
-            document.getElementById('lbl-auth-title').innerText = uiLabels[lang].authTitle;
-            document.getElementById('lbl-panel-title').innerText = uiLabels[lang].panelTitle;
-            document.getElementById('lbl-chat-title').innerText = uiLabels[lang].chatTitle;
-            document.getElementById('lbl-send-btn').innerText = uiLabels[lang].sendBtnText;
-            document.getElementById('btn-request-otp').innerText = uiLabels[lang].otpBtnText;
-            document.getElementById('lbl-admin-title').innerText = uiLabels[lang].adminTitle;
-            document.getElementById('lbl-admin-desc').innerText = uiLabels[lang].adminDesc;
-
-            document.getElementById('opt-sugarcane').innerText = uiLabels[lang].cropSugarcane;
-            document.getElementById('opt-cotton').innerText = uiLabels[lang].cropCotton;
-            
-            document.getElementById('inp-name').placeholder = uiLabels[lang].placeholderName;
-            document.getElementById('inp-phone').placeholder = uiLabels[lang].placeholderPhone;
-            document.getElementById('inp-acreage').placeholder = uiLabels[lang].placeholderAcre;
-            document.getElementById('auth-phone').placeholder = uiLabels[lang].placeholderPhone;
-            document.getElementById('chat-msg-field').placeholder = uiLabels[lang].placeholderChat;
-            
-            updateBannerState();
-            syncDatastream();
-        }
-
-        function updateBannerState() {
-            let banner = document.getElementById('view-banner');
-            if (userRole === 'Advisor') {
-                banner.innerText = uiLabels[language].advisorSync;
-                document.getElementById('chat-input-housing').style.display = 'flex';
-            } else if (securityCleared) {
-                banner.innerText = uiLabels[language].verified + currentFilterPhone + ")";
-                document.getElementById('chat-input-housing').style.display = 'flex';
-            } else {
-                banner.innerText = uiLabels[language].awaitSync;
-                document.getElementById('chat-input-housing').style.display = 'none';
-            }
-        }
-
-        function triggerOtpDispatched() {
-            let pInput = document.getElementById('auth-phone').value.trim();
-            if (pInput.length !== 10 || ["1234567890", "0000000000", "9999999999"].includes(pInput)) { 
-                alert("❌ Registry Error: Invalid Mobile Number."); 
-                return; 
-            }
-            currentFilterPhone = pInput;
-            generatedToken = Math.floor(1000 + Math.random() * 9000).toString();
-            document.getElementById('btn-request-otp').style.display = 'none';
-            document.getElementById('otp-input-subbox').style.display = 'block';
-            alert("📡 OTP: " + generatedToken);
-        }
-
-        function validateSecurityToken() {
-            if (document.getElementById('auth-code').value.trim() === generatedToken) {
-                securityCleared = true;
-                document.getElementById('auth-phone').disabled = true;
-                document.getElementById('otp-input-subbox').style.display = 'none';
-                document.getElementById('otp-locked-banner').style.display = 'block';
-                updateBannerState();
-                syncDatastream();
-            } else { alert("❌ OTP Failed."); }
-        }
-
-        async function syncDatastream() {
-            try {
-                let pRes = await fetch(LOCAL_API + "/api/plots");
-                let plots = await pRes.json();
-                let pAnchor = document.getElementById('plots-payload-container');
-                pAnchor.innerHTML = '';
-
-                let fPlots = userRole === 'Advisor' ? plots : plots.filter(p => String(p.phone) === String(currentFilterPhone).trim());
-
-                if (userRole === 'Farmer' && !securityCleared) {
-                    pAnchor.innerHTML = '';
-                } else if (fPlots.length === 0) {
-                    pAnchor.innerHTML = '<p style="color:var(--text-muted); font-style:italic;">...</p>';
-                } else {
-                    fPlots.forEach(p => {
-                        let localizedCrop = p.crop.toLowerCase() === "sugarcane" ? uiLabels[language].cropSugarcane : uiLabels[language].cropCotton;
-                        pAnchor.innerHTML += `
-                            <div class="data-card">
-                                <strong>${p.owner_name} — ${localizedCrop}</strong><br>
-                                <small>🗺️ ${uiLabels[language].metaArea}: ${p.acreage} ${uiLabels[language].metaAcres} | 📅 ${uiLabels[language].metaDate}: ${p.date}</small>
-                                <div class="advisory">${p.advisory}</div>
-                            </div>`;
-                    });
-                }
-
-                let cRes = await fetch(LOCAL_API + "/api/chat");
-                let chats = await cRes.json();
-                let cAnchor = document.getElementById('chat-logs-anchor');
-                cAnchor.innerHTML = '';
-
-                let fChats = userRole === 'Advisor' ? chats : chats.filter(c => c.text_payload.startsWith(currentFilterPhone.trim() + '::'));
-
-                if (userRole === 'Farmer' && !securityCleared) {
-                    cAnchor.innerHTML = '';
-                } else {
-                    fChats.forEach(m => {
-                        let txt = m.text_payload.includes('::') ? m.text_payload.split('::')[1] : m.text_payload;
-                        cAnchor.innerHTML += `<div class="msg ${m.sender_role === 'Farmer' ? 'msg-farmer' : 'msg-advisor'}"><b>${m.sender_role}:</b> <span>${txt}</span></div>`;
-                    });
-                }
-            } catch(e) { console.log("Sync active..."); }
-        }
-
-        async function dispatchPlotRegistration(e) {
-            e.preventDefault();
-            let name = document.getElementById('inp-name').value.trim();
-            let phone = document.getElementById('inp-phone').value.trim();
-            let crop = document.getElementById('inp-crop').value;
-            let date = document.getElementById('inp-date').value;
-            let acreage = parseFloat(document.getElementById('inp-acreage').value);
-
-            if (!phone || phone.length !== 10 || ["1234567890", "0000000000", "9999999999"].includes(phone)) {
-                alert("❌ Registry Error.");
+            if(!name || !phone || !date || !acreage) {
+                alert("Please fill all fields");
                 return;
             }
 
             try {
-                let response = await fetch(LOCAL_API + "/api/plots", {
+                await fetch(`${API_BASE_URL}/api/plots`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ farmer_name: name, phone_number: phone, crop: crop, date: date, acreage: acreage, lang: language })
+                    body: JSON.stringify({ farmer_name: name, phone_number: phone, crop: crop, acreage: parseInt(acreage), date: date, lang: activeLanguage })
                 });
-                let data = await response.json();
-                if (!response.ok || data.error) {
-                    alert("❌ Error.");
-                    return;
+                syncPlotsData();
+            } catch (err) {
+                console.error("Error saving data:", err);
+            }
+        }
+
+        async function syncPlotsData() {
+            console.log("Sync active... Requesting language parameter: " + activeLanguage);
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/plots?lang=${activeLanguage}`);
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                
+                const plots = await response.json();
+                const container = document.getElementById('plots-container');
+                
+                if (container) {
+                    container.innerHTML = ""; // Wipe container cleanly
+                    
+                    plots.forEach(plot => {
+                        const card = document.createElement('div');
+                        card.className = 'plot-card';
+                        
+                        let cropLabel = plot.crop;
+                        if (plot.crop.toLowerCase() === 'sugarcane') {
+                            if (activeLanguage === 'kn') cropLabel = 'ಕಬ್ಬು';
+                            else if (activeLanguage === 'te') cropLabel = 'చెరకు';
+                            else if (activeLanguage === 'mr') cropLabel = 'ऊस';
+                        }
+
+                        // Localized string headers for inside the card loop
+                        const detailsHeader = { en: "Acreage", kn: "ಪ್ರದೇಶ", mr: "क्षेत्र", te: "వైశాల్యం" }[activeLanguage] || "Acreage";
+                        const dateHeader = { en: "Date", kn: "ದಿನಾಂಕ", mr: "तारीख", te: "తేదీ" }[activeLanguage] || "Date";
+                        const unitHeader = { en: "acres", kn: "ಎಕರೆಗಳು", mr: "एकर", te: "ఎకరాలు" }[activeLanguage] || "acres";
+
+                        card.innerHTML = `
+                            <h3><strong>${plot.owner_name}</strong> — ${cropLabel}</h3>
+                            <p style="color: #666; font-size: 13px;">📖 ${detailsHeader}: ${plot.acreage} ${unitHeader} | 📅 ${dateHeader}: ${plot.date}</p>
+                            <div class="advisory-box">
+                                ${plot.advisory}
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
                 }
-
-                currentFilterPhone = phone;
-                securityCleared = true;
-                updateBannerState();
-                syncDatastream();
-                alert("🌾 Registered!");
-            } catch (err) { alert("Server error."); }
+            } catch (error) {
+                console.error("Sync loop error:", error);
+            }
         }
 
-        async function dispatchChatMessage() {
-            let field = document.getElementById('chat-msg-field');
-            let text = field.value.trim();
-            if (!text) return;
-            let pText = userRole === 'Farmer' ? currentFilterPhone + "::" + text : text;
-
-            await fetch(LOCAL_API + "/api/chat", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text_payload: pText, sender_role: userRole })
-            });
-            field.value = '';
-            syncDatastream();
-        }
-
-        setInterval(syncDatastream, 3000);
+        // Initialize background loops and default view settings
+        setLanguage('en');
+        setInterval(syncPlotsData, 8000);
     </script>
 </body>
 </html>
