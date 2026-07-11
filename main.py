@@ -311,4 +311,8 @@ def register_plot(form: PlotForm):
         conn.close()
 
 @app.post("/api/admin/login")
-def admin_l
+def admin_login(form: AdminLogin):
+    if form.password == ADMIN_PASSWORD:
+        return {"status": "success", "message": "Access granted"}
+    else:
+        return {"status": "error", "message": "Access denied"}
